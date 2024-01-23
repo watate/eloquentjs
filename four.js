@@ -46,6 +46,36 @@ function nth(list, index) {
     else return nth(list.rest, index - 1);
 }
 
+function deepEqual(a, b) {
+    console.log(b);
+    console.log(Object.keys(b));
+    for (let key of Object.keys(b)) {
+        console.log(Object.keys(b[key]));
+    }
+}
+
+function deepEqual(a, b) {
+    if (a === b) return true;
+    if (typeof a !== typeof b) return false;
+    if (!a && b || !b && a) return false;
+    if (typeof a !== "object") {
+        return a === b
+    }
+    output = true;
+    // console.log(a);
+    // console.log(typeof a === "object");
+    for (let key of Object.keys(a)) {
+        if (!(Object.keys(b).includes(key))) return false;
+        if (Object.keys(a[key]).length !== 0) {
+            output = output && deepEqual(a[key], b[key]);
+        } else {
+            output = output && a[key] === b[key];
+        }
+    }
+    return output;
+}
+
+console.log("A LIST");
 console.log(arrayToList([10, 20, 30]));
 // → {value: 10, rest: {value: 20, rest: null}}
 console.log(listToArray(arrayToList([10, 20, 30])));
@@ -55,3 +85,13 @@ console.log(prepend(10, prepend(20, null)));
 console.log(nth(arrayToList([10, 20, 30]), 1));
 // → 20
 console.log(nth(arrayToList([10, 20, 30]), 3));
+
+console.log("DEEP COMPARISON");
+
+let obj = {here: {is: "an"}, object: 2};
+console.log(deepEqual(obj, obj));
+// → true
+console.log(deepEqual(obj, {here: 1, object: 2}));
+// → false
+console.log(deepEqual(obj, {here: {is: "an"}, object: 2}));
+// → true
