@@ -4,10 +4,23 @@
 // console.log(newArrays);
 
 // YOUR OWN LOOP
-function loop(value, testFunc, updateFunc, bodyFunc) {
-    for (let i = value; testFunc(i); i = updateFunc(i)) {
-        bodyFunc(i);
-    }
-}
+// function loop(value, testFunc, updateFunc, bodyFunc) {
+//     for (let i = value; testFunc(i); i = updateFunc(i)) {
+//         bodyFunc(i);
+//     }
+// }
 
-loop(3, n => n > 0, n => n - 1, console.log);
+// loop(3, n => n > 0, n => n - 1, console.log);
+
+// EVERYTHING
+function every(array, test) {
+    if (array.length === 0) return true
+    return array.map(test).reduce((a, b) => a && b);
+}
+  
+  console.log(every([1, 3, 5], n => n < 10));
+  // → true
+  console.log(every([2, 4, 16], n => n < 10));
+  // → false
+  console.log(every([], n => n < 10));
+  // → true
