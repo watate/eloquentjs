@@ -24,73 +24,90 @@
 // console.log(new Vec(3, 4).length);
 // // → 5
 
-class Group {
-    constructor() {
-        this.group = [];
-    }
+function groupExercise() {
 
-    add(x) {
-        if (!this.group.includes(x)) {
-            this.group.push(x);
+    class Group {
+        constructor() {
+            this.group = [];
+        }
+
+        add(x) {
+            if (!this.group.includes(x)) {
+                this.group.push(x);
+            }
+        }
+
+        delete(x) {
+            if (this.group.includes(x)) {
+                this.group.splice(this.group.indexOf(x), 1);
+            }
+        }
+
+        has(x) {
+            return this.group.includes(x);
+        }
+
+        static from(iterable) {
+            let output = new Group();
+            for (let x of iterable) {
+                output.add(x);
+            }
+            return output;
         }
     }
 
-    delete(x) {
-        if (this.group.includes(x)) {
-            this.group.splice(this.group.indexOf(x), 1);
+    // let group = Group.from([10, 20]);
+    // console.log(group.has(10));
+    // // // → true
+    // console.log(group.has(30));
+    // // // → false
+    // console.log(group);
+    // group.add(10);
+    // group.delete(10);
+    // console.log(group.has(10));
+    // // // // → false
+    // console.log(group);
+
+    // ITERABLE GROUPS
+    class GroupIterator {
+        constructor(group) {
+            this.index = 0;
+            this.group = group.group;
+        }
+
+        next() {
+            if (this.index >= this.group.length) return { done: true };
+            let value = this.group[this.index];
+            this.index++;
+            return { value, done: false };
         }
     }
 
-    has(x) {
-        return this.group.includes(x);
+    Group.prototype[Symbol.iterator] = function () {
+        return new GroupIterator(this);
     }
 
-    static from(iterable) {
-        let output = new Group();
-        for (let x of iterable) {
-            output.add(x);
-        }
-        return output;
+    // group = Group.from(["a", "b", "c"]);
+    // console.log(group.group.length);
+
+    for (let value of Group.from(["a", "b", "c"])) {
+        console.log(value);
     }
+    // → a
+    // → b
+    // → c
+
 }
 
-// let group = Group.from([10, 20]);
-// console.log(group.has(10));
-// // // → true
-// console.log(group.has(30));
-// // // → false
-// console.log(group);
-// group.add(10);
-// group.delete(10);
-// console.log(group.has(10));
-// // // // → false
-// console.log(group);
+// Borrowing a method
+function borrowAMethodExercise() {
 
-// ITERABLE GROUPS
-class GroupIterator {
-    constructor(group) {
-        this.index = 0;
-        this.group = group.group;
-    }
+    let map = { one: true, two: true, hasOwnProperty: true };
 
-    next() {
-        if (this.index >= this.group.length) return {done: true};
-        let value = this.group[this.index];
-        this.index++;
-        return {value, done: false};
-    }
+    // Fix this call
+    console.log(Object.prototype.hasOwnProperty.call(map, "one"));
+    // → true
 }
 
-Group.prototype[Symbol.iterator] = function() {
-    return new GroupIterator(this);
-}
-
-// group = Group.from(["a", "b", "c"]);
-// console.log(group.group.length);
-
-for (let value of Group.from(["a", "b", "c"])) {
-    console.log(value);
-}
-  // → a
-  // → b
-  // → c
+// groupExercise();
+borrowAMethodExercise();
