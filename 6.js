@@ -54,14 +54,43 @@ class Group {
     }
 }
 
-let group = Group.from([10, 20]);
-console.log(group.has(10));
-// // → true
-console.log(group.has(30));
-// // → false
-console.log(group);
-group.add(10);
-group.delete(10);
-console.log(group.has(10));
+// let group = Group.from([10, 20]);
+// console.log(group.has(10));
+// // // → true
+// console.log(group.has(30));
 // // // → false
-console.log(group);
+// console.log(group);
+// group.add(10);
+// group.delete(10);
+// console.log(group.has(10));
+// // // // → false
+// console.log(group);
+
+// ITERABLE GROUPS
+class GroupIterator {
+    constructor(group) {
+        this.index = 0;
+        this.group = group.group;
+    }
+
+    next() {
+        if (this.index >= this.group.length) return {done: true};
+        let value = this.group[this.index];
+        this.index++;
+        return {value, done: false};
+    }
+}
+
+Group.prototype[Symbol.iterator] = function() {
+    return new GroupIterator(this);
+}
+
+// group = Group.from(["a", "b", "c"]);
+// console.log(group.group.length);
+
+for (let value of Group.from(["a", "b", "c"])) {
+    console.log(value);
+}
+  // → a
+  // → b
+  // → c
