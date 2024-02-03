@@ -30,15 +30,60 @@ function compareRobots(robot1, memory1, robot2, memory2) {
 
         testResults1.push(result1);
         testResults2.push(result2);
-        testResults3.push({result1, result2});
+        testResults3.push({ result1, result2 });
         if (result1 > result2) twoWin++;
         if (result2 > result1) oneWin++;
     }
-    
+
     //the robot that wins the majority of tests is the better robot
     console.log(`Robot 1 won ${oneWin} times, Robot 2 won ${twoWin} times`)
     console.log(testResults3);
 }
 
-compareRobots(routeRobot, [], goalOrientedRobot, []);
+// compareRobots(routeRobot, [], goalOrientedRobot, []);
 // compareRobots(goalOrientedRobot, [], randomRobot, []);
+
+function walterRobot({ place, parcels }, route) {
+    //generate routes for each parcel
+    if (route.length === 0) {
+        //separate picked from unpicked parcels
+        parcels_unpicked = parcels.filter(p => p.place !== place);
+        parcels_picked = parcels.filter(p => p.place === place);
+
+        let nearestParcel = (parcels_picked.length === 0 ?
+            parcels_unpicked[0] :
+            parcels_picked[0]);
+
+        let shortestRoute = (parcels_picked.length === 0 ?
+            findRoute(roadGraph, place, parcels_unpicked[0].place) :
+            findRoute(roadGraph, place, parcels_picked[0].address));
+
+        //if you have parcels, compare delivery address
+        if (parcels_picked.length > 0) {
+            for (let parcel of parcels_picked) {
+                let currentRoute = findRoute(roadGraph, place, parcel.address);
+                if (currentRoute.length < shortestRoute.length) {
+                    shortestRoute = currentRoute;
+                    nearestParcel = parcel;
+                }
+                // console.log(shortestRoute);
+            }
+        }
+
+        //if you have unpicked parcels, compare pickup address
+        if (parcels_unpicked.length > 0) {
+            for (let parcel of parcels_unpicked) {
+                let currentRoute = findRoute(roadGraph, place, parcel.place);
+                if (currentRoute.length < shortestRoute.length) {
+                    shortestRoute = currentRoute;
+                    nearestParcel = parcel;
+                }
+            }
+        }
+        route = shortestRoute;
+    }
+
+    return { direction: route[0], memory: route.slice(1) };
+}
+// runRobotAnimation(VillageState.random(), walterRobot, []);
+compareRobots(goalOrientedRobot, [], walterRobot, []);
