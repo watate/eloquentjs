@@ -86,4 +86,41 @@ function walterRobot({ place, parcels }, route) {
     return { direction: route[0], memory: route.slice(1) };
 }
 // runRobotAnimation(VillageState.random(), walterRobot, []);
-compareRobots(goalOrientedRobot, [], walterRobot, []);
+// compareRobots(goalOrientedRobot, [], walterRobot, []);
+
+class PGroup {
+    constructor(members) {
+        this.members = members;
+    }
+
+    // add - return PGroup with new member added, old one unchanged
+    add(x) {
+        if (this.has(x)) return this;
+        return new PGroup(this.members.concat([x]));
+    }
+
+    // delete - new instance without a given member
+    delete(x) {
+        if (!this.has(x)) return this;
+        return new PGroup(this.members.filter(p => p !== x));
+    }
+
+    // has - return true/false if has item
+    has(x) {
+        if (this.members.includes(x)) return true;
+        else return false;
+    }
+}
+PGroup.empty = new PGroup([]);
+let a = PGroup.empty.add("a");
+let ab = a.add("b");
+let b = ab.delete("a");
+console.log(a);
+console.log(ab);
+console.log(b);
+console.log(b.has("b"));
+// → true
+console.log(a.has("b"));
+// → false
+console.log(b.has("a"));
+// → false
